@@ -1,6 +1,7 @@
 Name = "fastfetch-themes"
 NamePretty = "Fastfetch themes"
 HideFromProviderlist = true
+Cache = false
 
 function GetEntries()
     local entries = {}
@@ -46,12 +47,12 @@ function GetEntries()
 
 
                 local is_current = (config_name == current_config)
-                local subtext = is_current and "● Current" or ""
+                local prefix = is_current and "* " or ""
 
                 table.insert(entries, {
-                    Text = display_name,
-                    Subtext = subtext,
+                    Text = prefix .. display_name,
                     Value = config_name,
+                    state = is_current and {'current'} or nil,
                     Actions = {
                         apply = "rm -f '"
                             .. config_link

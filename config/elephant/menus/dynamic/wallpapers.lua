@@ -1,6 +1,7 @@
 Name = "wallpapers"
 NamePretty = "Wallpapers"
 HideFromProviderlist = true
+Cache = false
 Action = "lua:SetWallpaper"
 
 function SetWallpaper(value)
@@ -82,7 +83,6 @@ function GetEntries()
 
                 table.insert(entries, {
                     Text = filename,
-                    Subtext = "wallpaper",
                     Value = line,
                     Icon = icon_to_use,
                 })

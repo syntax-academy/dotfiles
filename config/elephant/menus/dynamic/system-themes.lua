@@ -1,6 +1,7 @@
 Name = "system-themes"
 NamePretty = "System themes"
 HideFromProviderlist = true
+Cache = false
 
 function GetEntries()
     local entries = {}
@@ -33,22 +34,14 @@ function GetEntries()
 
 
                 local is_dynamic = (theme_name == "pywal" or theme_name == "matugen")
-                local theme_type = is_dynamic and "Dynamic" or "Static"
-
-
                 local is_current = (theme_name == current_theme)
-                local status = is_current and "● Current" or ""
-
-
-                local subtext = theme_type
-                if status ~= "" then
-                    subtext = status .. " • " .. theme_type
-                end
+                local prefix = is_current and "* " or ""
 
                 table.insert(entries, {
-                    Text = display_name,
-                    Subtext = subtext,
+                    Text = prefix .. display_name,
+                    Subtext = is_dynamic and "Dynamic" or "Static",
                     Value = display_name,
+                    state = is_current and {'current'} or nil,
                     Actions = {
                         apply = "theme-set '" .. display_name .. "'",
                     },
