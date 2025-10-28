@@ -1,6 +1,7 @@
 Name = "waybar-themes"
 NamePretty = "Waybar themes"
 HideFromProviderlist = true
+Cache = false
 
 function GetEntries()
     local entries = {}

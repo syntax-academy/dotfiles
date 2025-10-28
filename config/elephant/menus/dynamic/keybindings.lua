@@ -1,6 +1,7 @@
 Name = "keybindings"
 NamePretty = "Keybindings"
 HideFromProviderlist = true
+Cache = false
 
 function GetEntries()
     local entries = {}
