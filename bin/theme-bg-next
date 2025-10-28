@@ -8,8 +8,7 @@ TOTAL=${#BACKGROUNDS[@]}
 
 if [[ $TOTAL -eq 0 ]]; then
   notify-send "No background was found for theme" -t 2000
-  pkill -x swaybg
-  setsid uwsm app -- swaybg --color '#000000' >/dev/null 2>&1 &
+  hyprctl hyprpaper unload all
 else
   if [[ -L "$CURRENT_BACKGROUND_LINK" ]]; then
     CURRENT_BACKGROUND=$(readlink "$CURRENT_BACKGROUND_LINK")
@@ -34,6 +33,7 @@ else
 
   ln -nsf "$NEW_BACKGROUND" "$CURRENT_BACKGROUND_LINK"
 
-  pkill -x swaybg
-  setsid uwsm app -- swaybg -i "$CURRENT_BACKGROUND_LINK" -m fill >/dev/null 2>&1 &
+  hyprctl monitors -j | jq -r '.[].name' | while read -r monitor; do
+    hyprctl hyprpaper reload "$monitor,$NEW_BACKGROUND"
+  done
 fi
