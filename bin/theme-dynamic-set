@@ -163,6 +163,32 @@ main() {
         exit 1
     fi
 
+    # Check current theme
+    CURRENT_THEME_LINK="$CONFIG_BASE/current/theme"
+    if [[ -L "$CURRENT_THEME_LINK" ]]; then
+        CURRENT_THEME=$(basename "$(readlink "$CURRENT_THEME_LINK")")
+    else
+        CURRENT_THEME=""
+    fi
+
+    # Only run dynamic theming if on pywal or matugen theme
+    if [[ "$CURRENT_THEME" != "pywal" && "$CURRENT_THEME" != "matugen" ]]; then
+        echo "Current theme: $CURRENT_THEME (static)"
+        echo "Skipping dynamic theme generation..."
+        echo
+
+        ln -nsf "$WALLPAPER" "$CONFIG_BASE/current/background"
+        echo "Updated background symlink"
+        echo
+
+        echo "Wallpaper set without theme changes."
+        exit 0
+    fi
+
+    echo "Current theme: $CURRENT_THEME (dynamic)"
+    echo "Running dynamic theme generation..."
+    echo
+
     echo "Running pywal..."
     wal -n -s -t -e -i "$WALLPAPER"
 
@@ -171,7 +197,7 @@ main() {
         exit 1
     fi
 
-    echo "✓ Pywal colors extracted"
+    echo "Pywal colors extracted"
     echo
 
     echo "Processing templates..."
@@ -227,6 +253,13 @@ main() {
     echo "Updating background symlink..."
     ln -nsf "$WALLPAPER" "$CONFIG_BASE/current/background"
     echo "✓ Updated background symlink"
+    echo
+
+    echo "Applying wallpaper to monitors..."
+    hyprctl monitors -j | jq -r '.[].name' | while read -r monitor; do
+        hyprctl hyprpaper reload "$monitor,$WALLPAPER"
+    done
+    echo "✓ Wallpaper applied"
     echo
 
     echo "Reloading applications..."
